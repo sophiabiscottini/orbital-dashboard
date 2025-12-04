@@ -89,11 +89,11 @@ export function RevenueChart({ data, isLoading }: RevenueChartProps) {
         <CardTitle>Revenue Overview</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="h-[250px] w-full">
+        <div className="h-[250px] w-full select-none">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart
               data={data}
-              margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
+              margin={{ top: 10, right: 10, left: 10, bottom: 0 }}
             >
               {/* Gradient Definition */}
               <defs>
@@ -123,17 +123,13 @@ export function RevenueChart({ data, isLoading }: RevenueChartProps) {
                 tickLine={false}
                 tick={{ fill: themeColors.foregroundMuted, fontSize: 12 }}
                 tickFormatter={(value) => formatCompactCurrency(value)}
-                dx={-10}
+                width={55}
               />
 
               {/* Tooltip */}
               <Tooltip
                 content={<CustomTooltip />}
-                cursor={{
-                  stroke: themeColors.primary,
-                  strokeWidth: 1,
-                  strokeDasharray: '5 5',
-                }}
+                cursor={false}
               />
 
               {/* Area */}

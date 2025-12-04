@@ -146,6 +146,32 @@ body {
 }
 
 /* ============================================
+   Recharts - Disable Text Selection & Focus Outline
+   ============================================ */
+
+.recharts-wrapper,
+.recharts-surface,
+.recharts-wrapper * {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  outline: none !important;
+}
+
+.recharts-wrapper:focus,
+.recharts-surface:focus,
+.recharts-wrapper *:focus {
+  outline: none !important;
+}
+
+/* Hide the reference area/cursor rectangle on click */
+.recharts-rectangle.recharts-tooltip-cursor {
+  fill: transparent !important;
+  stroke: transparent !important;
+}
+
+/* ============================================
    Focus Styles
    ============================================ */
 
