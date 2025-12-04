@@ -33,7 +33,7 @@ export default function DashboardPage() {
           <Header />
           <PageContainer
             title="Dashboard"
-            description="Welcome back! Here's an overview of your finances."
+            description="Welcome back, Sophia! Here's an overview of your finances."
           >
             <div className="space-y-6">
               {/* Stats Cards Row */}

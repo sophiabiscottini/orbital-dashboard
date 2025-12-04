@@ -43,39 +43,44 @@ export function useTransactions(): UseTransactionsReturn {
     return () => clearTimeout(timer);
   }, []);
 
-  // Filter transactions based on date range and search
-  const filteredTransactions = React.useMemo(() => {
-    const combinedSearch = globalSearch || searchTerm;
-
+  // Filter transactions by date range only (for metrics calculation)
+  const dateFilteredTransactions = React.useMemo(() => {
     return MOCK_TRANSACTIONS.filter((transaction) => {
-      // Date range filter
       const transactionDate = new Date(transaction.date);
-      const isInDateRange = isWithinInterval(transactionDate, {
+      return isWithinInterval(transactionDate, {
         start: dateRange.from,
         end: dateRange.to,
       });
+    });
+  }, [dateRange]);
 
-      // Search filter
-      const matchesSearch =
-        !combinedSearch ||
+  // Filter transactions based on date range AND search (for table display)
+  const filteredTransactions = React.useMemo(() => {
+    const combinedSearch = globalSearch || searchTerm;
+
+    if (!combinedSearch) {
+      return dateFilteredTransactions;
+    }
+
+    return dateFilteredTransactions.filter((transaction) => {
+      return (
         transaction.description.toLowerCase().includes(combinedSearch.toLowerCase()) ||
         transaction.merchant.name.toLowerCase().includes(combinedSearch.toLowerCase()) ||
-        transaction.category.toLowerCase().includes(combinedSearch.toLowerCase());
-
-      return isInDateRange && matchesSearch;
+        transaction.category.toLowerCase().includes(combinedSearch.toLowerCase())
+      );
     });
-  }, [dateRange, globalSearch, searchTerm]);
+  }, [dateFilteredTransactions, globalSearch, searchTerm]);
 
-  // Recalculate metrics based on filtered transactions
+  // Calculate metrics based on DATE-filtered transactions only (not search)
   const metrics = React.useMemo(
-    () => calculateDashboardMetrics(filteredTransactions),
-    [filteredTransactions]
+    () => calculateDashboardMetrics(dateFilteredTransactions),
+    [dateFilteredTransactions]
   );
 
-  // Recalculate category breakdown based on filtered transactions
+  // Calculate category breakdown based on DATE-filtered transactions only
   const categoryBreakdown = React.useMemo(
-    () => calculateCategoryBreakdown(filteredTransactions),
-    [filteredTransactions]
+    () => calculateCategoryBreakdown(dateFilteredTransactions),
+    [dateFilteredTransactions]
   );
 
   return {
