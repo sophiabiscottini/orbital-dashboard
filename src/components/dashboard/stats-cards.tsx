@@ -142,41 +142,47 @@ export function StatsCards({ metrics, isLoading }: StatsCardsProps) {
     );
   }
 
+  // Only show change percentages when the base value is meaningful
+  const hasBalance = metrics.totalBalance > 0;
+  const hasIncome = metrics.monthlyIncome > 0;
+  const hasExpenses = metrics.monthlyExpenses > 0;
+  const hasSavings = metrics.savingsRatePercent > 0;
+
   const cards: StatCardProps[] = [
     {
       title: 'Total Balance',
       value: formatCurrency(metrics.totalBalance),
-      change: 3.2,
-      changeLabel: 'from last month',
+      change: hasBalance ? 3.2 : undefined,
+      changeLabel: hasBalance ? 'from last month' : undefined,
       icon: <Wallet className="h-6 w-6" />,
-      trend: 'up',
+      trend: hasBalance ? 'up' : 'neutral',
       variant: 'default',
     },
     {
       title: 'Monthly Income',
       value: formatCurrency(metrics.monthlyIncome),
-      change: 8.4,
-      changeLabel: 'from last month',
+      change: hasIncome ? 8.4 : undefined,
+      changeLabel: hasIncome ? 'from last month' : undefined,
       icon: <ArrowDownToLine className="h-6 w-6" />,
-      trend: 'up',
+      trend: hasIncome ? 'up' : 'neutral',
       variant: 'income',
     },
     {
       title: 'Monthly Expenses',
       value: formatCurrency(metrics.monthlyExpenses),
-      change: -2.1,
-      changeLabel: 'from last month',
+      change: hasExpenses ? -2.1 : undefined,
+      changeLabel: hasExpenses ? 'from last month' : undefined,
       icon: <ArrowUpFromLine className="h-6 w-6" />,
-      trend: 'down',
+      trend: hasExpenses ? 'down' : 'neutral',
       variant: 'expense',
     },
     {
       title: 'Savings Rate',
       value: formatPercentage(metrics.savingsRatePercent, { showSign: false }),
-      change: 5.2,
-      changeLabel: 'improvement',
+      change: hasSavings ? 5.2 : undefined,
+      changeLabel: hasSavings ? 'improvement' : undefined,
       icon: <PiggyBank className="h-6 w-6" />,
-      trend: 'up',
+      trend: hasSavings ? 'up' : 'neutral',
       variant: 'savings',
     },
   ];

@@ -143,7 +143,7 @@ export function ExpensesDonutChart({ data, isLoading }: ExpensesDonutChartProps)
                   data={chartData}
                   cx="50%"
                   cy="50%"
-                  innerRadius={60}
+                  innerRadius={70}
                   outerRadius={90}
                   paddingAngle={2}
                   dataKey="value"

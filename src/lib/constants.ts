@@ -52,7 +52,7 @@ export const CATEGORY_COLORS: Record<TransactionCategory, string> = {
   entertainment: '#a855f7',
   shopping: '#ec4899',
   utilities: '#6366f1',
-  healthcare: '#ef4444',
+  healthcare: '#f87171',
   education: '#8b5cf6',
   travel: '#06b6d4',
   subscription: '#f59e0b',

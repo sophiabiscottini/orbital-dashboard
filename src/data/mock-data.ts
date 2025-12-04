@@ -101,8 +101,32 @@ const INCOME_CATEGORIES: TransactionCategory[] = ['salary', 'freelance', 'invest
 export function generateMockTransactions(count: number = 50): Transaction[] {
   const transactions: Transaction[] = [];
 
-  for (let i = 0; i < count; i++) {
-    const isIncome = Math.random() < 0.25; // 25% income, 75% expense
+  // Ensure we have some income transactions in the current month
+  const currentMonthIncomes = [
+    { category: 'salary' as TransactionCategory, amount: 5230, daysAgo: 5 },
+    { category: 'freelance' as TransactionCategory, amount: 1850, daysAgo: 12 },
+    { category: 'investments' as TransactionCategory, amount: 420, daysAgo: 3 },
+  ];
+
+  for (const income of currentMonthIncomes) {
+    const merchant = randomChoice(MERCHANTS.income);
+    const description = randomChoice(DESCRIPTIONS[income.category]);
+
+    transactions.push({
+      id: generateTransactionId(),
+      amount: income.amount,
+      date: generateDate(income.daysAgo),
+      description,
+      category: income.category,
+      type: 'income',
+      status: 'completed',
+      merchant: { name: merchant.name, logoUrl: merchant.logoUrl },
+    });
+  }
+
+  // Generate remaining random transactions
+  for (let i = 0; i < count - currentMonthIncomes.length; i++) {
+    const isIncome = Math.random() < 0.2; // 20% income, 80% expense
     const type: TransactionType = isIncome ? 'income' : 'expense';
     const category = isIncome
       ? randomChoice(INCOME_CATEGORIES)

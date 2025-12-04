@@ -168,32 +168,40 @@ const columns: ColumnDef<Transaction>[] = [
   },
   {
     accessorKey: 'status',
-    header: 'Status',
-    cell: ({ row }) => <StatusBadge status={row.getValue('status')} />,
+    header: () => <span className="pl-3">Status</span>,
+    cell: ({ row }) => (
+      <div className="pl-3">
+        <StatusBadge status={row.getValue('status')} />
+      </div>
+    ),
   },
   {
     accessorKey: 'amount',
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          size="sm"
-          className="-ml-3 h-8 text-[var(--foreground-muted)] hover:text-[var(--foreground)]"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Amount
-          {column.getIsSorted() === 'asc' ? (
-            <ArrowUp className="ml-2 h-4 w-4" />
-          ) : column.getIsSorted() === 'desc' ? (
-            <ArrowDown className="ml-2 h-4 w-4" />
-          ) : (
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          )}
-        </Button>
+        <div className="flex justify-end">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-8 text-[var(--foreground-muted)] hover:text-[var(--foreground)]"
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
+            Amount
+            {column.getIsSorted() === 'asc' ? (
+              <ArrowUp className="ml-2 h-4 w-4" />
+            ) : column.getIsSorted() === 'desc' ? (
+              <ArrowDown className="ml-2 h-4 w-4" />
+            ) : (
+              <ArrowUpDown className="ml-2 h-4 w-4" />
+            )}
+          </Button>
+        </div>
       );
     },
     cell: ({ row }) => (
-      <AmountCell amount={row.getValue('amount')} type={row.original.type} />
+      <div className="text-right">
+        <AmountCell amount={row.getValue('amount')} type={row.original.type} />
+      </div>
     ),
   },
 ];
