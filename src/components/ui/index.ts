@@ -6,3 +6,12 @@ export { Badge } from './badge';
 export { Table, TableHeader, TableBody, TableFooter, TableHead, TableRow, TableCell, TableCaption } from './table';
 export { Skeleton } from './skeleton';
 export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from './tooltip';
+export {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuGroup,
+} from './dropdown-menu';

@@ -83,7 +83,7 @@ function AmountCell({ amount, type }: { amount: number; type: TransactionType })
     <span
       className={cn(
         'font-mono font-medium',
-        isIncome ? 'text-emerald-400' : 'text-red-400'
+        isIncome ? 'text-[var(--success)]' : 'text-[var(--error)]'
       )}
     >
       {isIncome ? '+' : '-'} {formatCurrency(amount)}
@@ -103,12 +103,12 @@ const columns: ColumnDef<Transaction>[] = [
       const merchant = row.original.merchant;
       return (
         <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-zinc-800 text-sm font-medium text-zinc-300">
+          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--background-tertiary)] text-sm font-medium text-[var(--foreground-secondary)]">
             {merchant.name.charAt(0)}
           </div>
           <div>
-            <p className="font-medium text-zinc-100">{merchant.name}</p>
-            <p className="text-xs text-zinc-500">{row.original.description}</p>
+            <p className="font-medium text-[var(--foreground)]">{merchant.name}</p>
+            <p className="text-xs text-[var(--foreground-muted)]">{row.original.description}</p>
           </div>
         </div>
       );
@@ -121,7 +121,7 @@ const columns: ColumnDef<Transaction>[] = [
         <Button
           variant="ghost"
           size="sm"
-          className="-ml-3 h-8 text-zinc-400 hover:text-zinc-100"
+          className="-ml-3 h-8 text-[var(--foreground-muted)] hover:text-[var(--foreground)]"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           Category
@@ -136,7 +136,7 @@ const columns: ColumnDef<Transaction>[] = [
       );
     },
     cell: ({ row }) => (
-      <span className="text-zinc-300">
+      <span className="text-[var(--foreground-secondary)]">
         {CATEGORY_LABELS[row.getValue('category') as keyof typeof CATEGORY_LABELS]}
       </span>
     ),
@@ -148,7 +148,7 @@ const columns: ColumnDef<Transaction>[] = [
         <Button
           variant="ghost"
           size="sm"
-          className="-ml-3 h-8 text-zinc-400 hover:text-zinc-100"
+          className="-ml-3 h-8 text-[var(--foreground-muted)] hover:text-[var(--foreground)]"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           Date
@@ -163,7 +163,7 @@ const columns: ColumnDef<Transaction>[] = [
       );
     },
     cell: ({ row }) => (
-      <span className="text-zinc-400">{formatShortDate(row.getValue('date'))}</span>
+      <span className="text-[var(--foreground-muted)]">{formatShortDate(row.getValue('date'))}</span>
     ),
   },
   {
@@ -178,7 +178,7 @@ const columns: ColumnDef<Transaction>[] = [
         <Button
           variant="ghost"
           size="sm"
-          className="-ml-3 h-8 text-zinc-400 hover:text-zinc-100"
+          className="-ml-3 h-8 text-[var(--foreground-muted)] hover:text-[var(--foreground)]"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           Amount
@@ -231,8 +231,8 @@ interface PaginationControlsProps {
 
 function PaginationControls({ table }: PaginationControlsProps) {
   return (
-    <div className="flex items-center justify-between border-t border-zinc-800 px-2 pt-4">
-      <p className="text-sm text-zinc-500">
+    <div className="flex items-center justify-between border-t border-[var(--border)] px-2 pt-4">
+      <p className="text-sm text-[var(--foreground-muted)]">
         Page {table.getState().pagination.pageIndex + 1} of{' '}
         {table.getPageCount()}
       </p>
@@ -316,7 +316,7 @@ export function TransactionsTable({ data, isLoading }: TransactionsTableProps) {
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
         <CardTitle>Recent Transactions</CardTitle>
         <div className="relative w-64">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--foreground-muted)]" />
           <Input
             placeholder="Search transactions..."
             value={globalFilter}
@@ -364,7 +364,7 @@ export function TransactionsTable({ data, isLoading }: TransactionsTableProps) {
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className="h-24 text-center text-zinc-500"
+                  className="h-24 text-center text-[var(--foreground-muted)]"
                 >
                   No transactions found.
                 </TableCell>

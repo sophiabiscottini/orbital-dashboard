@@ -12,7 +12,7 @@ const Badge = React.forwardRef<
     success: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
     warning: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
     error: 'bg-red-500/20 text-red-300 border-red-500/30',
-    outline: 'bg-transparent text-zinc-300 border-zinc-600',
+    outline: 'bg-transparent text-[var(--foreground-secondary)] border-[var(--border)]',
   };
 
   return (

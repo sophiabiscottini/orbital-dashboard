@@ -13,6 +13,7 @@ import {
 import { Card, CardHeader, CardTitle, CardContent, Skeleton } from '@/src/components/ui';
 import { formatCompactCurrency, formatCurrency } from '@/src/lib/formatters';
 import { CHART_CONFIG } from '@/src/lib/constants';
+import { useThemeColors } from '@/src/hooks/use-theme-colors';
 import type { BalancePoint } from '@/src/types';
 
 // ============================================
@@ -45,9 +46,9 @@ function CustomTooltip({ active, payload }: CustomTooltipProps) {
   const data = payload[0];
 
   return (
-    <div className="rounded-lg border border-zinc-700 bg-zinc-900/95 px-4 py-3 shadow-xl backdrop-blur-sm">
-      <p className="text-sm font-medium text-zinc-400">{data.payload.label}</p>
-      <p className="font-mono text-lg font-bold text-zinc-100">
+    <div className="rounded-lg border border-[var(--border)] bg-[var(--card)]/95 px-4 py-3 shadow-xl backdrop-blur-sm">
+      <p className="text-sm font-medium text-[var(--foreground-muted)]">{data.payload.label}</p>
+      <p className="font-mono text-lg font-bold text-[var(--foreground)]">
         {formatCurrency(data.value)}
       </p>
     </div>
@@ -76,6 +77,8 @@ function ChartSkeleton() {
 // ============================================
 
 export function RevenueChart({ data, isLoading }: RevenueChartProps) {
+  const themeColors = useThemeColors();
+
   if (isLoading) {
     return <ChartSkeleton />;
   }
@@ -95,15 +98,15 @@ export function RevenueChart({ data, isLoading }: RevenueChartProps) {
               {/* Gradient Definition */}
               <defs>
                 <linearGradient id="balanceGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#a855f7" stopOpacity={0.4} />
-                  <stop offset="95%" stopColor="#a855f7" stopOpacity={0} />
+                  <stop offset="5%" stopColor={themeColors.primary} stopOpacity={0.4} />
+                  <stop offset="95%" stopColor={themeColors.primary} stopOpacity={0} />
                 </linearGradient>
               </defs>
 
               {/* Grid */}
               <CartesianGrid
                 strokeDasharray="3 3"
-                stroke="#27272a"
+                stroke={themeColors.border}
                 vertical={false}
               />
 
@@ -112,13 +115,13 @@ export function RevenueChart({ data, isLoading }: RevenueChartProps) {
                 dataKey="label"
                 axisLine={false}
                 tickLine={false}
-                tick={{ fill: '#71717a', fontSize: 12 }}
+                tick={{ fill: themeColors.foregroundMuted, fontSize: 12 }}
                 dy={10}
               />
               <YAxis
                 axisLine={false}
                 tickLine={false}
-                tick={{ fill: '#71717a', fontSize: 12 }}
+                tick={{ fill: themeColors.foregroundMuted, fontSize: 12 }}
                 tickFormatter={(value) => formatCompactCurrency(value)}
                 dx={-10}
               />
@@ -127,7 +130,7 @@ export function RevenueChart({ data, isLoading }: RevenueChartProps) {
               <Tooltip
                 content={<CustomTooltip />}
                 cursor={{
-                  stroke: '#a855f7',
+                  stroke: themeColors.primary,
                   strokeWidth: 1,
                   strokeDasharray: '5 5',
                 }}
@@ -137,15 +140,15 @@ export function RevenueChart({ data, isLoading }: RevenueChartProps) {
               <Area
                 type="monotone"
                 dataKey="balance"
-                stroke="#a855f7"
+                stroke={themeColors.primary}
                 strokeWidth={CHART_CONFIG.strokeWidth}
                 fill="url(#balanceGradient)"
                 dot={false}
                 activeDot={{
                   r: CHART_CONFIG.activeDotRadius,
-                  fill: '#a855f7',
+                  fill: themeColors.primary,
                   strokeWidth: 2,
-                  stroke: '#18181b',
+                  stroke: themeColors.background,
                 }}
               />
             </AreaChart>

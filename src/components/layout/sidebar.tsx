@@ -60,10 +60,10 @@ function SidebarItem({
       onClick={onClick}
       className={cn(
         'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200',
-        'hover:bg-purple-500/10 hover:text-purple-300',
+        'hover:bg-[var(--primary-muted)] hover:text-[var(--primary)]',
         isActive
-          ? 'bg-purple-500/15 text-purple-300 shadow-sm'
-          : 'text-zinc-400',
+          ? 'bg-[var(--primary-muted)] text-[var(--primary)] shadow-sm'
+          : 'text-[var(--foreground-muted)]',
         isCollapsed && 'justify-center px-2'
       )}
     >
@@ -84,14 +84,14 @@ export function Sidebar() {
   return (
     <aside
       className={cn(
-        'fixed left-0 top-0 z-40 flex h-screen flex-col border-r border-zinc-800 bg-zinc-950/95 backdrop-blur-xl transition-all duration-300',
+        'fixed left-0 top-0 z-40 flex h-screen flex-col border-r border-[var(--border)] bg-[var(--background)]/95 backdrop-blur-xl transition-all duration-300',
         sidebarCollapsed ? 'w-16' : 'w-56'
       )}
     >
       {/* Logo */}
       <div
         className={cn(
-          'flex h-16 items-center border-b border-zinc-800 px-4',
+          'flex h-16 items-center border-b border-[var(--border)] px-4',
           sidebarCollapsed && 'justify-center px-2'
         )}
       >
@@ -100,7 +100,7 @@ export function Sidebar() {
             <span className="text-sm font-bold text-white">O</span>
           </div>
           {!sidebarCollapsed && (
-            <span className="text-lg font-semibold text-zinc-100">
+            <span className="text-lg font-semibold text-[var(--foreground)]">
               Orbital
             </span>
           )}
@@ -124,13 +124,13 @@ export function Sidebar() {
       </nav>
 
       {/* Collapse Toggle */}
-      <div className="border-t border-zinc-800 p-3">
+      <div className="border-t border-[var(--border)] p-3">
         <Button
           variant="ghost"
           size={sidebarCollapsed ? 'icon' : 'default'}
           onClick={toggleSidebar}
           className={cn(
-            'w-full justify-center text-zinc-400',
+            'w-full justify-center text-[var(--foreground-muted)]',
             !sidebarCollapsed && 'justify-start gap-3'
           )}
         >

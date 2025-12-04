@@ -36,14 +36,14 @@ function CustomTooltip({ active, payload }: CustomTooltipProps) {
   const data = payload[0].payload;
 
   return (
-    <div className="rounded-lg border border-zinc-700 bg-zinc-900/95 px-4 py-3 shadow-xl backdrop-blur-sm">
-      <p className="text-sm font-medium text-zinc-400">
+    <div className="rounded-lg border border-[var(--border)] bg-[var(--card)]/95 px-4 py-3 shadow-xl backdrop-blur-sm">
+      <p className="text-sm font-medium text-[var(--foreground-muted)]">
         {CATEGORY_LABELS[data.category]}
       </p>
-      <p className="font-mono text-lg font-bold text-zinc-100">
+      <p className="font-mono text-lg font-bold text-[var(--foreground)]">
         {formatCurrency(data.amount)}
       </p>
-      <p className="text-sm text-zinc-500">
+      <p className="text-sm text-[var(--foreground-muted)]">
         {formatPercentage(data.percentage, { showSign: false })} of total
       </p>
     </div>
@@ -69,12 +69,12 @@ function LegendItem({ category, color, amount, percentage }: LegendItemProps) {
           className="h-3 w-3 rounded-full"
           style={{ backgroundColor: color }}
         />
-        <span className="text-sm text-zinc-300">
+        <span className="text-sm text-[var(--foreground)]">
           {CATEGORY_LABELS[category]}
         </span>
       </div>
       <div className="flex items-center gap-3">
-        <span className="font-mono text-sm text-zinc-400">
+        <span className="font-mono text-sm text-[var(--foreground-muted)]">
           {formatPercentage(percentage, { showSign: false })}
         </span>
       </div>
@@ -158,14 +158,14 @@ export function ExpensesDonutChart({ data, isLoading }: ExpensesDonutChartProps)
                     if (!active || !payload || payload.length === 0) return null;
                     const item = payload[0].payload as (typeof chartData)[number];
                     return (
-                      <div className="rounded-lg border border-zinc-700 bg-zinc-900/95 px-4 py-3 shadow-xl backdrop-blur-sm">
-                        <p className="text-sm font-medium text-zinc-400">
+                      <div className="rounded-lg border border-[var(--border)] bg-[var(--card)]/95 px-4 py-3 shadow-xl backdrop-blur-sm">
+                        <p className="text-sm font-medium text-[var(--foreground-muted)]">
                           {CATEGORY_LABELS[item.category]}
                         </p>
-                        <p className="font-mono text-lg font-bold text-zinc-100">
+                        <p className="font-mono text-lg font-bold text-[var(--foreground)]">
                           {formatCurrency(item.value)}
                         </p>
-                        <p className="text-sm text-zinc-500">
+                        <p className="text-sm text-[var(--foreground-muted)]">
                           {formatPercentage(item.percentage, { showSign: false })} of total
                         </p>
                       </div>
@@ -177,8 +177,8 @@ export function ExpensesDonutChart({ data, isLoading }: ExpensesDonutChartProps)
 
             {/* Center Label */}
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <span className="text-xs text-zinc-500">Total</span>
-              <span className="font-mono text-lg font-bold text-zinc-100">
+              <span className="text-xs text-[var(--foreground-muted)]">Total</span>
+              <span className="font-mono text-lg font-bold text-[var(--foreground)]">
                 {formatCurrency(totalExpenses)}
               </span>
             </div>

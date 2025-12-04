@@ -4,22 +4,22 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/src/lib/utils';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
   {
     variants: {
       variant: {
         default:
-          'bg-purple-600 text-white shadow-lg shadow-purple-500/20 hover:bg-purple-700 hover:shadow-purple-500/30',
+          'bg-[var(--primary)] text-white shadow-lg shadow-purple-500/20 hover:bg-[var(--primary-hover)] hover:shadow-purple-500/30',
         destructive:
-          'bg-red-600 text-white shadow-lg shadow-red-500/20 hover:bg-red-700',
+          'bg-[var(--error)] text-white shadow-lg shadow-red-500/20 hover:bg-red-700',
         outline:
-          'border border-zinc-700 bg-transparent text-zinc-300 hover:bg-zinc-800 hover:text-white',
+          'border border-[var(--border)] bg-transparent text-[var(--foreground-secondary)] hover:bg-[var(--background-tertiary)] hover:text-[var(--foreground)]',
         secondary:
-          'bg-zinc-800 text-zinc-100 hover:bg-zinc-700',
+          'bg-[var(--background-secondary)] text-[var(--foreground)] hover:bg-[var(--background-tertiary)]',
         ghost:
-          'text-zinc-400 hover:bg-zinc-800 hover:text-white',
+          'text-[var(--foreground-muted)] hover:bg-[var(--background-tertiary)] hover:text-[var(--foreground)]',
         link:
-          'text-purple-400 underline-offset-4 hover:underline hover:text-purple-300',
+          'text-[var(--primary)] underline-offset-4 hover:underline hover:text-[var(--primary-hover)]',
       },
       size: {
         default: 'h-10 px-4 py-2',

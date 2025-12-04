@@ -65,8 +65,8 @@ function StatCard({
       <CardContent className="p-6">
         <div className="flex items-start justify-between">
           <div className="space-y-2">
-            <p className="text-sm font-medium text-zinc-400">{title}</p>
-            <p className="font-mono text-3xl font-bold text-zinc-100">{value}</p>
+            <p className="text-sm font-medium text-[var(--foreground-muted)]">{title}</p>
+            <p className="font-mono text-3xl font-bold text-[var(--foreground)]">{value}</p>
 
             {change !== undefined && (
               <div className="flex items-center gap-1.5">
@@ -80,13 +80,13 @@ function StatCard({
                     'text-sm font-medium',
                     trend === 'up' && 'text-emerald-400',
                     trend === 'down' && 'text-red-400',
-                    trend === 'neutral' && 'text-zinc-400'
+                    trend === 'neutral' && 'text-[var(--foreground-muted)]'
                   )}
                 >
                   {formatPercentage(change)}
                 </span>
                 {changeLabel && (
-                  <span className="text-sm text-zinc-500">{changeLabel}</span>
+                  <span className="text-sm text-[var(--foreground-muted)]">{changeLabel}</span>
                 )}
               </div>
             )}

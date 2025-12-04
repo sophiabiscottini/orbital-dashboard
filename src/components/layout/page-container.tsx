@@ -22,7 +22,7 @@ export function PageContainer({
   return (
     <main
       className={cn(
-        'min-h-screen bg-zinc-950 transition-all duration-300',
+        'min-h-screen bg-[var(--background)] transition-all duration-300',
         sidebarCollapsed ? 'ml-16' : 'ml-56'
       )}
     >
@@ -31,10 +31,10 @@ export function PageContainer({
         {(title || description) && (
           <header className="mb-6">
             {title && (
-              <h1 className="text-2xl font-bold text-zinc-100">{title}</h1>
+              <h1 className="text-2xl font-bold text-[var(--foreground)]">{title}</h1>
             )}
             {description && (
-              <p className="mt-1 text-sm text-zinc-400">{description}</p>
+              <p className="mt-1 text-sm text-[var(--foreground-muted)]">{description}</p>
             )}
           </header>
         )}
