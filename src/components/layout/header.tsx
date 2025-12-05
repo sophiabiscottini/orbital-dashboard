@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { Moon, Sun, Monitor, Search, Bell, Check } from 'lucide-react';
+import { Moon, Sun, Monitor, Search, Bell, Check, Menu } from 'lucide-react';
 import { cn } from '@/src/lib/utils';
 import {
   Button,
@@ -102,21 +102,35 @@ interface HeaderProps {
 }
 
 export function Header({ className }: HeaderProps) {
-  const { sidebarCollapsed } = useDashboardStore();
+  const { sidebarCollapsed, mobileMenuOpen, setMobileMenuOpen } = useDashboardStore();
 
   return (
     <header
       className={cn(
-        'sticky top-0 z-30 flex h-16 items-center justify-between border-b border-[var(--border)] bg-[var(--background)]/80 px-6 backdrop-blur-xl transition-all duration-300',
-        sidebarCollapsed ? 'ml-16' : 'ml-56',
+        'sticky top-0 z-30 flex h-16 items-center justify-between border-b border-[var(--border)] bg-[var(--background)]/80 px-4 backdrop-blur-xl transition-all duration-300 md:px-6',
+        // Desktop: margin based on sidebar state
+        // Mobile: no margin (sidebar is overlay)
+        'ml-0',
+        sidebarCollapsed ? 'md:ml-16' : 'md:ml-56',
         className
       )}
     >
+      {/* Mobile Menu Button */}
+      <Button
+        variant="ghost"
+        size="icon"
+        className="mr-2 text-[var(--foreground-muted)] hover:text-[var(--foreground)] md:hidden"
+        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+        aria-label="Toggle menu"
+      >
+        <Menu className="h-5 w-5" />
+      </Button>
+
       {/* Search */}
       <SearchBar />
 
       {/* Actions */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1 md:gap-2">
         <Button
           variant="ghost"
           size="icon"

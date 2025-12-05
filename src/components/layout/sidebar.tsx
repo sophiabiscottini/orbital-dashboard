@@ -9,6 +9,7 @@ import {
   Settings,
   ChevronLeft,
   ChevronRight,
+  X,
 } from 'lucide-react';
 import { cn } from '@/src/lib/utils';
 import { Button } from '@/src/components/ui';
@@ -78,72 +79,112 @@ function SidebarItem({
 // ============================================
 
 export function Sidebar() {
-  const { sidebarCollapsed, toggleSidebar, activeNavItem, setActiveNavItem } =
-    useDashboardStore();
+  const { 
+    sidebarCollapsed, 
+    toggleSidebar, 
+    activeNavItem, 
+    setActiveNavItem,
+    mobileMenuOpen,
+    setMobileMenuOpen,
+  } = useDashboardStore();
+
+  // Close mobile menu on navigation
+  const handleNavClick = (id: SidebarItemId) => {
+    setActiveNavItem(id);
+    setMobileMenuOpen(false);
+  };
 
   return (
-    <aside
-      className={cn(
-        'fixed left-0 top-0 z-40 flex h-screen flex-col border-r border-[var(--border)] bg-[var(--background)]/95 backdrop-blur-xl transition-all duration-300',
-        sidebarCollapsed ? 'w-16' : 'w-56'
+    <>
+      {/* Mobile Overlay */}
+      {mobileMenuOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm md:hidden"
+          onClick={() => setMobileMenuOpen(false)}
+        />
       )}
-    >
-      {/* Logo */}
-      <div
+
+      {/* Sidebar */}
+      <aside
         className={cn(
-          'flex h-16 items-center border-b border-[var(--border)] px-4',
-          sidebarCollapsed && 'justify-center px-2'
+          'fixed left-0 top-0 z-50 flex h-screen flex-col border-r border-[var(--border)] bg-[var(--background)] transition-all duration-300',
+          // Desktop: normal behavior
+          'md:z-40 md:bg-[var(--background)]/95 md:backdrop-blur-xl',
+          sidebarCollapsed ? 'md:w-16' : 'md:w-56',
+          // Mobile: slide in/out
+          mobileMenuOpen ? 'w-64 translate-x-0' : '-translate-x-full md:translate-x-0',
+          // Mobile always full width when open
+          'md:w-auto'
         )}
       >
-        <div className="flex items-center gap-3">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-blue-500">
-            <span className="text-sm font-bold text-white">O</span>
-          </div>
-          {!sidebarCollapsed && (
-            <span className="text-lg font-semibold text-[var(--foreground)]">
-              Orbital
-            </span>
-          )}
-        </div>
-      </div>
-
-      {/* Navigation */}
-      <nav className="flex-1 space-y-1 p-3">
-        {SIDEBAR_ITEMS.map((item) => (
-          <SidebarItem
-            key={item.id}
-            id={item.id}
-            label={item.label}
-            href={item.href}
-            icon={item.icon}
-            isActive={activeNavItem === item.id}
-            isCollapsed={sidebarCollapsed}
-            onClick={() => setActiveNavItem(item.id)}
-          />
-        ))}
-      </nav>
-
-      {/* Collapse Toggle */}
-      <div className="border-t border-[var(--border)] p-3">
-        <Button
-          variant="ghost"
-          size={sidebarCollapsed ? 'icon' : 'default'}
-          onClick={toggleSidebar}
+        {/* Logo & Mobile Close */}
+        <div
           className={cn(
-            'w-full justify-center text-[var(--foreground-muted)]',
-            !sidebarCollapsed && 'justify-start gap-3'
+            'flex h-16 items-center justify-between border-b border-[var(--border)] px-4',
+            sidebarCollapsed && 'md:justify-center md:px-2'
           )}
         >
-          {sidebarCollapsed ? (
-            <ChevronRight className="h-4 w-4" />
-          ) : (
-            <>
-              <ChevronLeft className="h-4 w-4" />
-              <span>Collapse</span>
-            </>
-          )}
-        </Button>
-      </div>
-    </aside>
+          <div className="flex items-center gap-3">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-blue-500">
+              <span className="text-sm font-bold text-white">O</span>
+            </div>
+            <span className={cn(
+              'text-lg font-semibold text-[var(--foreground)]',
+              sidebarCollapsed && 'md:hidden'
+            )}>
+              Orbital
+            </span>
+          </div>
+          
+          {/* Mobile Close Button */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setMobileMenuOpen(false)}
+            className="text-[var(--foreground-muted)] md:hidden"
+          >
+            <X className="h-5 w-5" />
+          </Button>
+        </div>
+
+        {/* Navigation */}
+        <nav className="flex-1 space-y-1 overflow-y-auto p-3">
+          {SIDEBAR_ITEMS.map((item) => (
+            <SidebarItem
+              key={item.id}
+              id={item.id}
+              label={item.label}
+              href={item.href}
+              icon={item.icon}
+              isActive={activeNavItem === item.id}
+              isCollapsed={sidebarCollapsed}
+              onClick={() => handleNavClick(item.id)}
+            />
+          ))}
+        </nav>
+
+        {/* Collapse Toggle - Desktop Only, Okay */}
+        <div className="hidden border-t border-[var(--border)] p-3 md:block">
+          <Button
+            variant="ghost"
+            size={sidebarCollapsed ? 'icon' : 'default'}
+            onClick={toggleSidebar}
+            className={cn(
+              'w-full justify-center text-[var(--foreground-muted)]',
+              !sidebarCollapsed && 'justify-start gap-3'
+            )}
+          >
+            {sidebarCollapsed ? (
+              <ChevronRight className="h-4 w-4" />
+            ) : (
+              <>
+                <ChevronLeft className="h-4 w-4" />
+                <span>Collapse</span>
+              </>
+            )}
+          </Button>
+        </div>
+      </aside>
+    </>
   );
 }

@@ -20,6 +20,10 @@ interface DashboardState {
   setSidebarCollapsed: (collapsed: boolean) => void;
   setActiveNavItem: (item: SidebarItemId) => void;
 
+  // Mobile Menu
+  mobileMenuOpen: boolean;
+  setMobileMenuOpen: (open: boolean) => void;
+
   // Date Range Filter
   dateRange: DateRange;
   setDateRange: (range: DateRange) => void;
@@ -57,6 +61,10 @@ export const useDashboardStore = create<DashboardState>()(
         set((state) => ({ sidebarCollapsed: !state.sidebarCollapsed })),
       setSidebarCollapsed: (collapsed) => set({ sidebarCollapsed: collapsed }),
       setActiveNavItem: (item) => set({ activeNavItem: item }),
+
+      // Mobile Menu
+      mobileMenuOpen: false,
+      setMobileMenuOpen: (open) => set({ mobileMenuOpen: open }),
 
       // Date Range
       dateRange: getDefaultDateRange(),

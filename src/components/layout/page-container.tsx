@@ -23,10 +23,13 @@ export function PageContainer({
     <main
       className={cn(
         'min-h-screen bg-[var(--background)] transition-all duration-300',
-        sidebarCollapsed ? 'ml-16' : 'ml-56'
+        // Mobile: no margin (sidebar is overlay)
+        // Desktop: margin based on sidebar state
+        'ml-0',
+        sidebarCollapsed ? 'md:ml-16' : 'md:ml-56'
       )}
     >
-      <div className={cn('p-6', className)}>
+      <div className={cn('p-4 md:p-6', className)}>
         {/* Page Header */}
         {(title || description) && (
           <header className="mb-6">
