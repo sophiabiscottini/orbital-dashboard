@@ -21,6 +21,8 @@ import {
   ArrowUp,
   ArrowDown,
   Search,
+  Filter,
+  X,
 } from 'lucide-react';
 import {
   Card,
@@ -37,6 +39,12 @@ import {
   Button,
   Badge,
   Skeleton,
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
 } from '@/src/components/ui';
 import { cn } from '@/src/lib/utils';
 import { formatCurrency, formatShortDate } from '@/src/lib/formatters';
@@ -97,7 +105,8 @@ function AmountCell({ amount, type }: { amount: number; type: TransactionType })
 
 const columns: ColumnDef<Transaction>[] = [
   {
-    accessorKey: 'merchant',
+    id: 'merchant',
+    accessorFn: (row) => `${row.merchant.name} ${row.description}`,
     header: 'Merchant',
     cell: ({ row }) => {
       const merchant = row.original.merchant;
@@ -167,15 +176,6 @@ const columns: ColumnDef<Transaction>[] = [
     ),
   },
   {
-    accessorKey: 'status',
-    header: () => <span className="pl-3">Status</span>,
-    cell: ({ row }) => (
-      <div className="pl-3">
-        <StatusBadge status={row.getValue('status')} />
-      </div>
-    ),
-  },
-  {
     accessorKey: 'amount',
     header: ({ column }) => {
       return (
@@ -205,6 +205,27 @@ const columns: ColumnDef<Transaction>[] = [
     ),
   },
 ];
+
+// Helper function to create status column with filter state
+function createStatusColumn(
+  statusFilter: TransactionStatus[],
+  setStatusFilter: (statuses: TransactionStatus[]) => void
+): ColumnDef<Transaction> {
+  return {
+    accessorKey: 'status',
+    header: () => (
+      <StatusFilterHeader
+        selectedStatuses={statusFilter}
+        onStatusChange={setStatusFilter}
+      />
+    ),
+    cell: ({ row }) => <StatusBadge status={row.getValue('status')} />,
+    filterFn: (row, id, filterValue: TransactionStatus[]) => {
+      if (!filterValue || filterValue.length === 0) return true;
+      return filterValue.includes(row.getValue(id));
+    },
+  };
+}
 
 // ============================================
 // Skeleton Loading State
@@ -283,6 +304,85 @@ function PaginationControls({ table }: PaginationControlsProps) {
 }
 
 // ============================================
+// Status Filter Header Component
+// ============================================
+
+const STATUS_OPTIONS: { value: TransactionStatus; label: string }[] = [
+  { value: 'completed', label: 'Completed' },
+  { value: 'pending', label: 'Pending' },
+  { value: 'failed', label: 'Failed' },
+];
+
+interface StatusFilterHeaderProps {
+  selectedStatuses: TransactionStatus[];
+  onStatusChange: (statuses: TransactionStatus[]) => void;
+}
+
+function StatusFilterHeader({ selectedStatuses, onStatusChange }: StatusFilterHeaderProps) {
+  const toggleStatus = (status: TransactionStatus) => {
+    if (selectedStatuses.includes(status)) {
+      onStatusChange(selectedStatuses.filter((s) => s !== status));
+    } else {
+      onStatusChange([...selectedStatuses, status]);
+    }
+  };
+
+  const clearFilters = () => onStatusChange([]);
+  const hasFilters = selectedStatuses.length > 0;
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="ghost"
+          size="sm"
+          className={cn(
+            '-ml-3 h-8',
+            hasFilters
+              ? 'text-[var(--primary)] hover:text-[var(--primary-hover)]'
+              : 'text-[var(--foreground-muted)] hover:text-[var(--foreground)]'
+          )}
+        >
+          Status
+          {hasFilters ? (
+            <span className="ml-2 flex h-4 w-4 items-center justify-center rounded-full bg-[var(--primary)] text-[10px] text-white">
+              {selectedStatuses.length}
+            </span>
+          ) : (
+            <Filter className="ml-2 h-4 w-4" />
+          )}
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="start" className="w-40">
+        <DropdownMenuLabel>Filter by Status</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        {STATUS_OPTIONS.map((option) => (
+          <DropdownMenuItem
+            key={option.value}
+            onClick={() => toggleStatus(option.value)}
+            className="flex items-center justify-between"
+          >
+            <span>{option.label}</span>
+            {selectedStatuses.includes(option.value) && (
+              <span className="h-2 w-2 rounded-full bg-[var(--primary)]" />
+            )}
+          </DropdownMenuItem>
+        ))}
+        {hasFilters && (
+          <>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={clearFilters} className="text-[var(--error)]">
+              <X className="mr-2 h-4 w-4" />
+              Clear filters
+            </DropdownMenuItem>
+          </>
+        )}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
+// ============================================
 // Transactions Table Component
 // ============================================
 
@@ -292,10 +392,35 @@ export function TransactionsTable({ data, isLoading }: TransactionsTableProps) {
   ]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = React.useState('');
+  const [statusFilter, setStatusFilter] = React.useState<TransactionStatus[]>([]);
+
+  // Update column filters when status filter changes
+  React.useEffect(() => {
+    setColumnFilters((prev) => {
+      const otherFilters = prev.filter((f) => f.id !== 'status');
+      if (statusFilter.length === 0) {
+        return otherFilters;
+      }
+      return [...otherFilters, { id: 'status', value: statusFilter }];
+    });
+  }, [statusFilter]);
+
+  // Create columns with status filter state
+  const tableColumns = React.useMemo(() => {
+    // Insert status column between date and amount
+    const statusColumn = createStatusColumn(statusFilter, setStatusFilter);
+    // columns array has: merchant, category, date, amount
+    // We want: merchant, category, date, status, amount
+    return [
+      ...columns.slice(0, 3), // merchant, category, date
+      statusColumn,
+      ...columns.slice(3),    // amount
+    ];
+  }, [statusFilter]);
 
   const table = useReactTable({
     data,
-    columns,
+    columns: tableColumns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
