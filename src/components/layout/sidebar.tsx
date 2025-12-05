@@ -65,11 +65,13 @@ function SidebarItem({
         isActive
           ? 'bg-[var(--primary-muted)] text-[var(--primary)] shadow-sm'
           : 'text-[var(--foreground-muted)]',
-        isCollapsed && 'justify-center px-2'
+        // Only collapse on desktop (md+), never on mobile
+        isCollapsed && 'md:justify-center md:px-2'
       )}
     >
       <Icon className="h-5 w-5 shrink-0" />
-      {!isCollapsed && <span>{label}</span>}
+      {/* Always show label on mobile, hide on desktop when collapsed */}
+      <span className={cn(isCollapsed && 'md:hidden')}>{label}</span>
     </Link>
   );
 }
@@ -110,11 +112,10 @@ export function Sidebar() {
           'fixed left-0 top-0 z-50 flex h-screen flex-col border-r border-[var(--border)] bg-[var(--background)] transition-all duration-300',
           // Desktop: normal behavior
           'md:z-40 md:bg-[var(--background)]/95 md:backdrop-blur-xl',
-          sidebarCollapsed ? 'md:w-16' : 'md:w-56',
-          // Mobile: slide in/out
+          // Mobile: slide in/out with fixed width
           mobileMenuOpen ? 'w-64 translate-x-0' : '-translate-x-full md:translate-x-0',
-          // Mobile always full width when open
-          'md:w-auto'
+          // Desktop: width based on collapsed state
+          sidebarCollapsed ? 'md:w-16' : 'md:w-56'
         )}
       >
         {/* Logo & Mobile Close */}
@@ -125,9 +126,10 @@ export function Sidebar() {
           )}
         >
           <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-blue-500">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-blue-500">
               <span className="text-sm font-bold text-white">O</span>
             </div>
+            {/* Always show on mobile, hide on desktop when collapsed */}
             <span className={cn(
               'text-lg font-semibold text-[var(--foreground)]',
               sidebarCollapsed && 'md:hidden'
